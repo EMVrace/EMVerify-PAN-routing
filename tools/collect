@@ -148,6 +148,11 @@ def create_html_code(directories, columns, tex_add):
 					cols.append(col)
 				if (columns == 'all' or col in columns) and res.startswith('falsified'):
 					results['Verified'] = 'No'
+		
+		if 'Theory' not in results:
+			print '[Warning] No theory name found for "%s", so it will be ignored'\
+						% proof_file
+			continue
 
 		#rules
 		rule_names = []
@@ -166,8 +171,8 @@ def create_html_code(directories, columns, tex_add):
 			for line in open(theory_file).readlines():
 				m = re.match(RULE_HEADER_SPTHY_REGEX, line)
 				if m and m.group(1) not in rule_names:
-					print '[Warning] Rule "%s" occurs in "%s.spthy" but not in "%s.proof"'\
-								% (m.group(1), proto, proto)
+					print '[Warning] Rule "%s" occurs in "%s" but not in "%s"'\
+								% (m.group(1), theory_file, proof_file)
 			#lines of code
 			loc = len(open(theory_file).readlines())
 			if loc < loc_min: loc_min = loc

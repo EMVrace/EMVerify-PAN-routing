@@ -1,10 +1,8 @@
-#columns for tables in the paper
-
 No.
 Theory
 #WARNING
 
-executable
+#executable
 bank_accepts
 
 auth_to_terminal_minimal
@@ -18,7 +16,7 @@ auth_to_bank_minimal
 #secrecy_PAN
 
 #Rules
-LoC
-Time
+#LoC
+#Time
 #Theory file
 #Proof file
