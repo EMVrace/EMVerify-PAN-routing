@@ -1,8 +1,8 @@
-# Tamarin
+# A formal model of EMV contactless with PAN-based routing
 
-This repository contains a model of the **EMV contactless protocol** specified in [Tamarin](https://tamarin-prover.github.io/). This is an extension of the model at https://github.com/EMVrace/EMVerify, which is the complementary material of the IEEE S&P'21 paper titled *The EMV Standard: Break, Fix, Verify*. As such, much of the content of this repository is a copy from the original.
+This repository contains a model of the EMV contactless protocol specified in [Tamarin](https://tamarin-prover.github.io/). This is complementary material of our USENIX Security'21 paper *Card Brand Mixup Attack: Bypassing the PIN in non-Visa cards by Using Them for Visa Transactions*.
 
-To see the actual differences between the original model and this extension, browse the diff on `Contactless.spthy` for [this commit](https://github.com/tr756gevff52131/repo/commit/69b374b3c674b71852ebe3c4bea066fd75fc01fd).
+This model is an extension of our previous model, available at https://github.com/EMVrace/EMVerify. As such, much of the content of this repository is a copy from the original. To see the actual differences between our original model and this extension, browse the diff on `Contactless.spthy` for [this commit](https://github.com/EMVrace/EMVerify-PAN-routing/commit/53278963954007b7b50c5abab40792fb6619fe46).
 
 ## Folder layout
 
@@ -12,17 +12,19 @@ To see the actual differences between the original model and this extension, bro
 * [models-n-proofs](./models-n-proofs/) contains the auto-generated target models (`.spthy`) and their proofs (`.proof`).
 * [`results.html`](./results.html) shows the analysis results in HTML format.
 * [tools](./tools/) contains useful scripts:
-	* [`collect`](./tools/collect) is the Python script that summarizes the proofs in an human-readable HTML file. It also generates latex code of the summary table.
+	* [`collect`](./tools/collect) is the Python script that summarizes the proofs in an human-readable HTML file. It also generates latex code of the summary table. It works with `make html`.
 	* [`decomment`](./tools/decomment) is the Python script that prints a comment-free copy of the input model.
+	* [`columns.txt`](./tools/columns.txt) is a file containing the columns to be printed in the `results.html` file, should the option `--columns=tools/columns.txt` be passed to `make html`.
+	* [`tex-add.txt`](./tools/tex-add.txt) is a file containing the tex notes to be added to the latex-coded table, should the option `--tex-add=tools/tex-add.txt` be passed to `make html`.
 
 ## Usage
 
 From the generic model, the Makefile generates *target models*. These are models that are composed of one generic model in addition to extra rules that produce the `Commit` facts, which are used for the (in)validation of the security properties. A target model is generated and then analyzed with Tamarin, all by using `make` with the appropriate variable instances.
 
-Further details on the variables and usage of them can be found in our submission file and in [https://github.com/EMVrace/EMVerify](https://github.com/EMVrace/EMVerify). The following are two variables we have added to verify countermeasures:
+Further details on the variables and usage of them can be found in paper and in [https://github.com/EMVrace/EMVerify](https://github.com/EMVrace/EMVerify). The following are two variables we have added to verify countermeasures:
 
 * `softfix`: if set to `Yes`, we restrict the analysis only to online-authorized transactions where DDA authentication was performed if the terminal ran the Visa kernel. This are the fixes to the PIN bypass on Visa, proposed in *The EMV Standard: Break, Fix, Verify*.
-* `hardfix`: if set to `Yes`, we restrict the analysis only to online-authorized transactions where DDA or CDA authentication was performed. Also, here we have modified the SDAD input to include the AID. These are the countermeasures that we have proposed in our submission.
+* `hardfix`: if set to `Yes`, we restrict the analysis only to online-authorized transactions where DDA or CDA authentication was performed. Also, here we have modified the SDAD input to include the AID. These are the countermeasures that we have proposed in our paper.
 
 ## Full-scale analysis
 
@@ -44,7 +46,7 @@ All proofs were constructed using Tamarin version 1.7.0 (git revision: 2884fce8c
 
 ## Verified Countermeasures
 
-**The countermeasures to the PIN bypass on Visa**, proposed in *The EMV Standard: Break, Fix, Verify*, are the following:
+**The countermeasures to the PIN bypass on Visa**, which we proposed in *The EMV Standard: Break, Fix, Verify*, are the following:
 1. The terminal must always have the card supply the SDAD.
 1. The terminal must always verify the SDAD.
 
@@ -64,3 +66,7 @@ To produce the security proof for these fixes, run:
 make paynet=PAN hardfix=Yes
 ```
 which generates the model file `Contactless_HardFix.spthy` and the proof file `Contactless_HardFix.proof`.
+
+## Team
+
+[David Basin](https://people.inf.ethz.ch/basin/), [Ralf Sasse](https://people.inf.ethz.ch/rsasse/), and [Jorge Toro](https://jorgetp.github.io) (maintainer of this repo)
