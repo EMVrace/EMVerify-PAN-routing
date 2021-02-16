@@ -1,8 +1,10 @@
-# A formal model of EMV contactless with PAN-based routing
+# A model of EMV with PAN-based routing
 
-This repository contains a model of the EMV contactless protocol specified in [Tamarin](https://tamarin-prover.github.io/). This is complementary material of our USENIX Security'21 paper *Card Brand Mixup Attack: Bypassing the PIN in non-Visa cards by Using Them for Visa Transactions*.
+This repository contains a [Tamarin](https://tamarin-prover.github.io/) model of the EMV contactless protocol. This is complementary material of our USENIX Security'21 paper *Card Brand Mixup Attack: Bypassing the PIN in non-Visa cards by Using Them for Visa Transactions*.
 
-This model is an extension of our previous model, available at https://github.com/EMVrace/EMVerify. As such, much of the content of this repository is a copy from the original. To see the actual differences between our original model and this extension, browse the diff on `Contactless.spthy` for [this commit](https://github.com/EMVrace/EMVerify-PAN-routing/commit/53278963954007b7b50c5abab40792fb6619fe46).
+This model is an extension of our previous model, available at https://github.com/EMVrace/EMVerify. As such, much of the content of this repository is a copy from the original. As opposed to the original model, this extended model allows for transactions where the terminal determines the card brand, and thus the network for routing, from the card number (i.e. the PAN).
+
+To see code-level differences between our original model and this extension, browse the diff on `Contactless.spthy` for [this commit](https://github.com/EMVrace/EMVerify-PAN-routing/commit/53278963954007b7b50c5abab40792fb6619fe46).
 
 ## Folder layout
 
@@ -23,8 +25,8 @@ From the generic model, the Makefile generates *target models*. These are models
 
 Further details on the variables and usage of them can be found in paper and in [https://github.com/EMVrace/EMVerify](https://github.com/EMVrace/EMVerify). The following are two variables we have added to verify countermeasures:
 
-* `softfix`: if set to `Yes`, we restrict the analysis only to online-authorized transactions where DDA authentication was performed if the terminal ran the Visa kernel. This are the fixes to the PIN bypass on Visa, proposed in *The EMV Standard: Break, Fix, Verify*.
-* `hardfix`: if set to `Yes`, we restrict the analysis only to online-authorized transactions where DDA or CDA authentication was performed. Also, here we have modified the SDAD input to include the AID. These are the countermeasures that we have proposed in our paper.
+* `softfix`: if set to `Yes`, we restrict the analysis only to online-authorized transactions where DDA authentication was performed if the terminal ran the Visa kernel. These are the fixes to the PIN bypass on Visa that we proposed in *The EMV Standard: Break, Fix, Verify*.
+* `hardfix`: if set to `Yes`, we restrict the analysis to online-authorized transactions only where DDA or CDA authentication was performed. Also, here we have modified the SDAD input to include the AID. These are the countermeasures that we have proposed in our paper.
 
 ## Full-scale analysis
 
@@ -42,7 +44,7 @@ We have split our analysis of the **32** target models into two groups:
 	* the value of the transaction amount was `<value>` (valid options are `Low` and `High`, which indicate below and above the CVM-required limit, respectively), and
 	* if `_PaynetPAN` is present, then the terminal routed the transaction to the payment network determined by the `PAN`; otherwise the terminal routed the transaction to the Visa payment network.
 
-All proofs were constructed using Tamarin version 1.7.0 (git revision: 2884fce8c40e3e5bdb87526214652696e089326d, branch: develop) on a computing server running Ubuntu 16.04.3 with two Intel(R) Xeon(R) E5-2650 v4 @ 2.20GHz CPUs (with 12 cores each) and 256GB of RAM. Here we used 10 threads and at most 20GB of RAM per target model.
+For the analysis, we used Tamarin version 1.7.0 (git revision: 2884fce8c40e3e5bdb87526214652696e089326d, branch: develop) on a computing server running Ubuntu 16.04.3 with two Intel(R) Xeon(R) E5-2650 v4 @ 2.20GHz CPUs (with 12 cores each) and 256GB of RAM. We used 10 threads and at most 20GB of RAM per target model.
 
 ## Verified Countermeasures
 
